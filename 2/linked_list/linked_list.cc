@@ -80,7 +80,7 @@ LinkedListNode * getNode(LinkedListNode * listHead, int index) {
     temp = temp->next_node;
     count++;
   }
-    return temp;
+  return temp;
 }
 
 // Inserts an element at index (so that once inserted it is at that index) into
@@ -89,54 +89,20 @@ LinkedListNode * getNode(LinkedListNode * listHead, int index) {
 // hint hint) and 'wire' in the new element. Whiteboard this one out!!
 bool LinkedList::InsertAtIndex(int value, int index) {
 
-#ifdef DEBUG
-  std::cout << "#### Insert At Index ####" << std::endl;
-#endif
   if(index < 0 || index > this->Size()) return false;
-
-
   LinkedListNode * newNode = new LinkedListNode;
   newNode->data = value;
 
   LinkedListNode * current = getNode(head, index - 1);
   LinkedListNode * next = getNode(current, 1);
 
-#ifdef DEBUG
-  std::cout << "Next: " << next << std::endl;
-  std::cout << "Current: " << current << std::endl;
-  std::cout << "Head: " << head << std::endl;
-#endif
+  if(!next) newNode->next_node = NULL;
+  else newNode->next_node = next;
 
-  if(head != nullptr) {
-    if (index == 0) {
-#ifdef DEBUG
-      std::cout << "Start of List" << std::endl;
-#endif
-      newNode->next_node = head;
-      head = newNode;
-    }
-    else if(next == NULL) { 
-#ifdef DEBUG
-      std::cout << "End of List" << std::endl;
-#endif
-      newNode->next_node = NULL;
-      current->next_node = newNode;
-    }
-    else {
-#ifdef DEBUG
-      std::cout << "Adding to List" << std::endl;
-#endif
-      newNode->next_node = next;
-      current->next_node = newNode;
-    }
-  }
-  else {
-#ifdef DEBUG
-    std::cout << "Empty List" << std::endl;
-#endif
-    newNode->next_node = NULL;
-    head = newNode;
-  }
+  if(!current || !index) head = newNode;
+  else current->next_node = newNode;
+
+  if(!index) newNode->next_node = current;
 
   return true;
 }
@@ -167,36 +133,17 @@ int& LinkedList::operator[](int index) {
 // item by 'wiring' the next_node to skip that item. You'll also need to call
 // delete on that item to free the memory back to the OS.
 bool LinkedList::RemoveAtIndex(int index) {
-#ifdef DEBUG
-  std::cout << "#### Remove At Index ####" << std::endl;
-#endif
   if(index < 0 || index >= this->Size()) return false;
 
   LinkedListNode * previous = getNode(head, index - 1);
   LinkedListNode * current = getNode(head, index);
   LinkedListNode * next = getNode(current, 1);
 
+  if(!index) head = next;
+  else if(!next) previous->next_node = NULL;
+  else previous->next_node = next;
 
-  if (index == 0) {
-#ifdef DEBUG
-    std::cout << "Start of List" << std::endl;
-#endif
-    head = next;
-  }
-  else if (next == NULL) { 
-#ifdef DEBUG
-    std::cout << "End of List" << std::endl;
-#endif
-    previous->next_node = NULL;
-  }
-  else {
-#ifdef DEBUG
-    std::cout << "Middle of List" << std::endl;
-#endif
-    previous->next_node = next;
-  }
   delete current;
-
   return true;
 }
 

@@ -6,12 +6,16 @@ tmpf="`mktemp /tmp/onchange.XXXXX`"
 cp "$f" "$tmpf"  
 trap "rm $tmpf; exit 1" 2  
 make
-./${f%%.*}
+if [ $? -eq 0 ]; then
+  ./${f%%.*}
+fi
 while : ; do  
   if [ "$f" -nt "$tmpf" ]; then  
     cp "$f" "$tmpf" 
     make
-    ./${f%%.*}
+    if [ $? -eq 0 ]; then
+      ./${f%%.*}
+    fi
   fi  
   sleep 2  
 done  
